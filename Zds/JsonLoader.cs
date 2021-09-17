@@ -57,9 +57,17 @@ namespace Zds
                 JToken token = stack.Pop();
                 switch (token.Type)
                 {
-                    // Treat arrays as out of scope for now
-                    case JTokenType.Array:
+                    case JTokenType.Comment:
+                    case JTokenType.Constructor:
+                    case JTokenType.Null:
+                    case JTokenType.None:
                         continue;
+                    case JTokenType.Array:
+                        foreach (string element in token.Values<string>())
+                        {
+                            pathValues.Add(new (token.Path, element));
+                        }
+                        break;
                     case JTokenType.Object:
                     case JTokenType.Property:
                         foreach (JToken child in token.Children())

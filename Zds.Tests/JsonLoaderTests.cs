@@ -54,14 +54,18 @@ namespace Zds.Tests
             List<PathValue> expected = new()
             {
                 new("_id", "436bf9b0-1147-4c0a-8439-6f79833bff5b"),
-                new("type", "incident")
+                new("type", "incident"),
+                new("tags", "Ohio"),
+                new("tags", "Pennsylvania"),
             };
             CollectionAssert.AreEquivalent(expected, objectRecords[0].PathValues.ToList());
             
             expected = new()
             {
                 new("_id", "1a227508-9f39-427c-8f57-1b72f3fab87c"),
-                new("type", "incident")
+                new("type", "incident"),
+                new("tags", "Puerto Rico"),
+                new("tags", "Idaho")
             };
             CollectionAssert.AreEquivalent(expected, objectRecords[1].PathValues.ToList());
         }
@@ -92,7 +96,7 @@ namespace Zds.Tests
         }
         
         [TestMethod]
-        public void GetObjectAtValidPositionFromInvalidJsonThrowsError()
+        public void GetObjectAtPositionFromInvalidJsonThrowsError()
         {
             MemoryStream stream = new(Encoding.UTF8.GetBytes(InvalidTestJson));
             Assert.ThrowsException<JsonLoaderException>(() =>
