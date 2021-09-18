@@ -4,7 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Zds
+namespace Zds.Core
 {
     public record Position(int Line, int LinePosition);
     public record ObjectRecord(Position Position, List<PathValue> PathValues);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Zds
+namespace Zds.Core
 {
     public class Repository
     {
