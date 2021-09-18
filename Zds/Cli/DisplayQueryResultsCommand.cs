@@ -67,7 +67,7 @@ namespace Zds.Cli
                 _total = total;
                 _size = size;
                 Start = 0;
-                End = _size;
+                End = Math.Min(_total, _size);
             }
 
             public int Start { get; init; }
