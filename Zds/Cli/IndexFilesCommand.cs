@@ -16,7 +16,7 @@ namespace Zds.Cli
         
         public void Execute()
         {
-            AnsiConsole.Render(new Rule("[darkorange]Indexing[/]")
+            AnsiConsole.Render(new Rule($"[{Theme.PrimaryColour}]Indexing[/]")
             {
                 Alignment = Justify.Left
             });
@@ -37,7 +37,7 @@ namespace Zds.Cli
                     }
                 });
             
-            AnsiConsole.Render(new Rule("[darkorange]Build Query[/]")
+            AnsiConsole.Render(new Rule($"[{Theme.PrimaryColour}]Build Query[/]")
             {
                 Alignment = Justify.Left
             });

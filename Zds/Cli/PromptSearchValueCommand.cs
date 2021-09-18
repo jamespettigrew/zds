@@ -15,8 +15,7 @@ namespace Zds.Cli
         public void Execute(string selectedSource, string selectedPath)
         {
             var prompt =
-                new TextPrompt<string?>(
-                        "[grey][[Leave empty to search for null/missing values]][/] [darkorange]Search term:[/]")
+                new TextPrompt<string?>($"[grey][[Leave empty to search for null/missing values]][/] [{Theme.PrimaryColour}]Search term:[/]")
                     .AllowEmpty();
             string? searchTerm = AnsiConsole.Prompt(prompt);
 

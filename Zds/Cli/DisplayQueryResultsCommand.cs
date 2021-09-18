@@ -20,7 +20,7 @@ namespace Zds.Cli
         public void Execute(string selectedSource, string selectedPath, string? value)
         {
             List<Position> matches = _repository.QuerySource(selectedSource, selectedPath, value);
-            Rule r = new($"[darkorange]Matches:[/] {matches.Count}");
+            Rule r = new($"[{Theme.PrimaryColour}]Matches:[/] {matches.Count}");
             r.Alignment = Justify.Left;
             AnsiConsole.Render(r);
 
@@ -103,9 +103,9 @@ namespace Zds.Cli
 
             for (int i = page.Start; i < page.End; i++)
             {
-                var tree = new Tree(new Text($"{i + 1}", Style.Parse("darkorange")))
+                var tree = new Tree(new Text($"{i + 1}", Style.Parse($"{Theme.PrimaryColour}")))
                 {
-                   Style = Style.Parse("darkorange")
+                   Style = Style.Parse($"{Theme.PrimaryColour}")
                 };
                 
                 FileStream stream = File.Open(source, FileMode.Open);
@@ -114,7 +114,7 @@ namespace Zds.Cli
                 var panel = new Panel(escaped)
                 {
                     Border = BoxBorder.Rounded,
-                    BorderStyle = Style.Parse("darkorange")
+                    BorderStyle = Style.Parse($"{Theme.PrimaryColour}")
                 };
                 tree.AddNode(panel);
                 table.AddRow(tree);
@@ -123,7 +123,7 @@ namespace Zds.Cli
             var footer = new Table
             {
                 Border = TableBorder.None,
-                BorderStyle = Style.Parse("darkorange")
+                BorderStyle = Style.Parse($"{Theme.PrimaryColour}")
             };
             footer.AddColumn("");
             footer.HideHeaders();

@@ -15,11 +15,11 @@ namespace Zds.Cli
         public void Execute()
         {
             var prompt = new SelectionPrompt<string>()
-                .Title("Which [darkorange]source[/] would you like to [darkorange]search[/]?")
+                .Title($"Which [{Theme.PrimaryColour}]source[/] would you like to [{Theme.PrimaryColour}]search[/]?")
                 .MoreChoicesText("[grey](Press UP and DOWN to reveal more.)[/]")
                 .AddChoices(_repository.ListSources());
             string selectedSource = AnsiConsole.Prompt(prompt);
-            AnsiConsole.MarkupLine("Source selected: [darkorange]{0}[/]", selectedSource);
+            AnsiConsole.MarkupLine($"Source selected: [{Theme.PrimaryColour}]{0}[/]", selectedSource);
             
             new SelectPathCommand(_repository).Execute(selectedSource);
         }
