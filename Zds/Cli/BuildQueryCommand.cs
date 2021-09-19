@@ -17,10 +17,15 @@ namespace Zds.Cli
 
         public ObjectGraphQuery Execute()
         {
+            AnsiConsole.Render(new Rule($"[{Theme.PrimaryColour}]Build Query[/]")
+            {
+                Alignment = Justify.Left
+            });
+            
             string source = PromptSource();
             string path = PromptPath(source);
             string? value = PromptSearchValue();
-
+            
             return new ObjectGraphQuery(source, path, value);
         }
         

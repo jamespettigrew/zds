@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Zds.Core.Index;
+using Zds.Core.Relations;
 
 namespace Zds.Core.Queries
 {
