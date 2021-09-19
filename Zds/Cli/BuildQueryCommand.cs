@@ -50,7 +50,9 @@ namespace Zds.Cli
         private string? PromptSearchValue()
         {
             var prompt = new TextPrompt<string?>($"Search [{Theme.PrimaryColour}]value[/]:")
-                .AllowEmpty();
+                .AllowEmpty()
+                .DefaultValue(null)
+                .HideDefaultValue();
             return AnsiConsole.Prompt(prompt);
         }
     }

@@ -76,7 +76,10 @@ namespace Zds.Core
                         }
                         break;
                     default:
-                        pathValues.Add(new (token.Path, token.ToString()));
+                        string value = token.ToString();
+                        // For now, we'll treat empty strings as 'missing' values.
+                        if (string.IsNullOrWhiteSpace(value)) continue;
+                        pathValues.Add(new (token.Path, value));
                         break;
                 }
             }
