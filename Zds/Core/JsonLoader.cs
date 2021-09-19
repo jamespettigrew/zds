@@ -59,17 +59,15 @@ namespace Zds.Core
                     case JTokenType.None:
                         continue;
                     case JTokenType.Array:
-                        foreach (string element in token.Values<string>())
+                        foreach (JToken child in token.Children())
                         {
-                            pathValues.Add(new (token.Path, element));
+                            if (child.Type != JTokenType.String) continue;
+                            pathValues.Add(new (token.Path, child.ToString()));
                         }
                         break;
                     case JTokenType.Object:
                     case JTokenType.Property:
-                        foreach (JToken child in token.Children())
-                        {
-                            stack.Push(child);
-                        }
+                        foreach (JToken child in token.Children()) { stack.Push(child); }
                         break;
                     default:
                         string value = token.ToString();
