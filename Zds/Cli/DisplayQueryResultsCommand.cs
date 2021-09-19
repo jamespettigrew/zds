@@ -1,31 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json.Linq;
 using Spectre.Console;
 using Spectre.Console.Rendering;
-using Zds.Core;
+using Zds.Core.Queries;
 
 namespace Zds.Cli
 {
     public class DisplayQueryResultsCommand
     {
-        private readonly Repository _repository;
+        private readonly ObjectGraphQueryHandler _queryHandler;
         
-        public DisplayQueryResultsCommand(Repository repository)
+        public DisplayQueryResultsCommand(ObjectGraphQueryHandler queryHandler)
         {
-            _repository = repository;
+            _queryHandler = queryHandler;
         }
         
         public void Execute(string selectedSource, string selectedPath, string? value)
         {
-            List<Position> matches = _repository.QuerySource(selectedSource, selectedPath, value);
-            Rule r = new($"[{Theme.PrimaryColour}]Matches:[/] {matches.Count}");
-            r.Alignment = Justify.Left;
+            ObjectGraphQuery query = new(selectedSource, selectedPath, value);
+            Page<ObjectGraph> page = _queryHandler.Execute(query, 3);
+            
+            Rule r = new($"[{Theme.PrimaryColour}]Query Results[/]") {Alignment = Justify.Left};
             AnsiConsole.Render(r);
-
-            Page page = new (matches.Count, 3);
-            AnsiConsole.Render(GenerateRenderableForPage(selectedSource, matches, page));
+            AnsiConsole.Render(GenerateRenderableForPage(page));
             
             bool displayingResults = true;
             while (displayingResults)
@@ -37,7 +35,7 @@ namespace Zds.Cli
                         if (prevPage != null)
                         {
                             page = prevPage;
-                            AnsiConsole.Render(GenerateRenderableForPage(selectedSource, matches, page));
+                            AnsiConsole.Render(GenerateRenderableForPage(page));
                         }
                         break;
                     case {Key: ConsoleKey.RightArrow}:
@@ -45,7 +43,7 @@ namespace Zds.Cli
                         if (nextPage != null)
                         {
                             page = nextPage;
-                            AnsiConsole.Render(GenerateRenderableForPage(selectedSource, matches, page));
+                            AnsiConsole.Render(GenerateRenderableForPage(page));
                         }
                         break;
                     default:
@@ -53,70 +51,41 @@ namespace Zds.Cli
                         break;
                 }
             }
-
-            new SelectSourceCommand(_repository).Execute();
         }
 
-        private record Page
-        {
-            private int _total;
-            private int _size;
-            
-            public Page(int total, int size)
-            {
-                _total = total;
-                _size = size;
-                Start = 0;
-                End = Math.Min(_total, _size);
-            }
-
-            public int Start { get; init; }
-            public int End { get; init; }
-            
-            public Page? Prev()
-            {
-                int prevStart = Math.Max(0, Start - _size);
-                int prevEnd = Math.Min(_total, Start);
-                if (prevEnd <= prevStart) return null;
-                return this with {
-                    Start = prevStart,
-                    End = prevEnd
-                };
-            }
-
-            public Page? Next()
-            {
-                int nextStart = End;
-                int nextEnd = Math.Min(_total, End + _size);
-                if (nextStart >= nextEnd) return null;
-                return this with {
-                    Start = nextStart,
-                    End = nextEnd
-                };
-            }
-        }
-        
-        private IRenderable GenerateRenderableForPage(string source, List<Position> matches, Page page)
+        private IRenderable GenerateRenderableForPage(Page<ObjectGraph> page)
         {
             var table = new Table { Border = TableBorder.Rounded };
             table.AddColumn("Page");
 
-            for (int i = page.Start; i < page.End; i++)
+            List<ObjectGraph> results = page.Results;
+            for (int i = 0; i < results.Count; i++)
             {
-                var tree = new Tree(new Text($"{i + 1}", Style.Parse($"{Theme.PrimaryColour}")))
-                {
-                   Style = Style.Parse($"{Theme.PrimaryColour}")
-                };
-                
-                FileStream stream = File.Open(source, FileMode.Open);
-                JObject jobj = JsonLoader.GetObjectStartingAtPosition(stream, matches[i]);
-                string escaped = Markup.Escape(jobj.ToString());
+                ObjectGraph match = results[i];
+                Tree tree = new(new Text($"{page.Start + i + 1}", Style.Parse($"{Theme.PrimaryColour}")));
+                string escaped = Markup.Escape(match.Obj.ToString());
                 var panel = new Panel(escaped)
                 {
                     Border = BoxBorder.Rounded,
                     BorderStyle = Style.Parse($"{Theme.PrimaryColour}")
                 };
                 tree.AddNode(panel);
+
+                Tree relatedNode = new(new Text("Related"))
+                {
+                    Style = Style.Parse($"{Theme.SecondaryColour}")
+                };
+                foreach (JObject relatedObj in match.RelatedObjects)
+                {
+                    relatedNode.AddNode(
+                        new Panel(Markup.Escape(relatedObj.ToString()))
+                        {
+                            Border = BoxBorder.Rounded,
+                            BorderStyle = Style.Parse($"{Theme.SecondaryColour}")
+                        }
+                    );
+                }
+                tree.AddNode(relatedNode);
                 table.AddRow(tree);
             }
 
@@ -127,7 +96,7 @@ namespace Zds.Cli
             };
             footer.AddColumn("");
             footer.HideHeaders();
-            footer.AddRow(new Text($"Displaying results {page.Start + 1}-{page.End} / {matches.Count}"));
+            footer.AddRow(new Text($"Displaying results {page.Start + 1}-{page.End} / {page.Total}"));
             if (page.Prev() != null) footer.AddRow(new Text("Prev (←)"));
             if (page.Next() != null) footer.AddRow(new Text("Next (→)"));
             footer.AddRow(new Text("New Search (Any other key)"));

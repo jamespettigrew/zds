@@ -19,7 +19,7 @@ namespace Zds.Cli
                 .MoreChoicesText("[grey](Press UP and DOWN to reveal more.)[/]")
                 .AddChoices(_repository.ListSources());
             string selectedSource = AnsiConsole.Prompt(prompt);
-            AnsiConsole.MarkupLine($"Source selected: [{Theme.PrimaryColour}]{0}[/]", selectedSource);
+            AnsiConsole.MarkupLine($"Source selected: [{Theme.PrimaryColour}]{selectedSource}[/]");
             
             new SelectPathCommand(_repository).Execute(selectedSource);
         }

@@ -1,0 +1,10 @@
+[{
+  "from": {
+    "source": "users.json",
+    "path": "_id"
+  },
+  "to": {
+    "source": "tickets.json",
+    "path": "assignee_id"
+  }
+}]

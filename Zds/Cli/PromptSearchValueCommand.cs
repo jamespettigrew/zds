@@ -1,5 +1,6 @@
 using Spectre.Console;
 using Zds.Core;
+using Zds.Core.Queries;
 
 namespace Zds.Cli
 {
@@ -19,7 +20,7 @@ namespace Zds.Cli
                     .AllowEmpty();
             string? searchTerm = AnsiConsole.Prompt(prompt);
 
-            new DisplayQueryResultsCommand(_repository).Execute(selectedSource, selectedPath, searchTerm);
+            new DisplayQueryResultsCommand(new ObjectGraphQueryHandler(_repository, new RelationManager())).Execute(selectedSource, selectedPath, searchTerm);
         }
     }
 }

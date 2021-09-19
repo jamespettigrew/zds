@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace Zds.Core
 {
+    public record Match(string Source, string Path, Position Position);
+    
     public class Repository
     {
         private readonly Dictionary<string, InvertedIndex> _sourceIndexes = new();
@@ -27,20 +29,21 @@ namespace Zds.Core
             return new List<string>();
         }
         
-        public List<Position> QuerySource(string source, string path, string? value)
+        public List<Match> QuerySource(string source, string path, string? value)
         {
             if (_sourceIndexes.TryGetValue(source, out InvertedIndex? index))
             {
-                if (value != null) return index.Query(new PathValue(path, value));
-
                 // A null value implies we wish to find objects with no value at the specified path.
-                return index
-                    .ListPositions()
-                    .Except(index.ListPositionsIndexedAtPath(path))
+                IEnumerable<Position> matchingPositions = value != null ?
+                    index.Query(new PathValue(path, value)) :
+                    index.ListPositions().Except(index.ListPositionsIndexedAtPath(path));
+                
+                return matchingPositions
+                    .Select(position => new Match(source, path, position))
                     .ToList();
             }
 
-            return new List<Position>();
+            return new List<Match>();
         }
     }
 }
