@@ -25,27 +25,39 @@ namespace Zds.Cli
         
         public void Execute()
         {
-            AnsiConsole.Render(new Rule($"[{Theme.PrimaryColour}]Loading[/]")
-            {
-                Alignment = Justify.Left
-            });
-            
-            AnsiConsole.Status()
-                .Start("Indexing files...", ctx =>
-                {
-                    IEnumerable<string> filenames = Directory.EnumerateFiles($"{Directory.GetCurrentDirectory()}/Samples");
-                    foreach (string filename in filenames)
-                    {
-                        FileStream stream = File.Open(filename, FileMode.Open);
-                        IEnumerable<ObjectRecord> records = JsonLoader.EnumerateObjects(stream);
-                        foreach (var record in records)
-                        {
-                            _objectRepository.AddObjectRecord(filename, record);
-                        }
-                        AnsiConsole.MarkupLine($"Indexed {filename}");
-                    }
-                });
+            Rule rule = new ($"[{Theme.PrimaryColour}]Loading[/]") { Alignment = Justify.Left };
+            AnsiConsole.Render(rule);
+            AnsiConsole.Status().Start("Indexing files...", _ => LoadDataFiles());
+            LoadRelations();
+        }
 
+        private void LoadDataFiles()
+        {
+            string dataPath = _options.DataSearchPath ?? Directory.GetCurrentDirectory();
+            IEnumerable<string> filenames = Directory.EnumerateFiles(dataPath);
+            foreach (string filename in filenames)
+            {
+                try
+                {
+                    FileStream stream = File.Open(filename, FileMode.Open);
+                    IEnumerable<ObjectRecord> records = JsonLoader.EnumerateObjects(stream);
+                    foreach (var record in records)
+                    {
+                        _objectRepository.AddObjectRecord(filename, record);
+                    }
+
+                    AnsiConsole.MarkupLine($"Indexed {filename}");
+                }
+                catch (JsonLoaderException e)
+                {
+                    AnsiConsole.Render(new Text($"[yellow]WARNING[/] error loading {filename}."));
+                    AnsiConsole.WriteException(e);
+                }
+            }
+        }
+
+        private void LoadRelations()
+        {
             try
             {
                 if (_options.RelationsPath != null)
