@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Zds.Core;
+using Zds.Core.Index;
 
 namespace Zds.Tests
 {

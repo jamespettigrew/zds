@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Zds.Core
+namespace Zds.Core.Index
 {
     public record Match(string Source, string Path, Position Position);
     
-    public class Repository
+    public class ObjectRepository
     {
         private readonly Dictionary<string, InvertedIndex> _sourceIndexes = new();
         public List<string> ListSources() => _sourceIndexes.Keys.ToList();

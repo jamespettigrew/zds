@@ -2,16 +2,17 @@ using System.Collections.Generic;
 using System.IO;
 using Spectre.Console;
 using Zds.Core;
+using Zds.Core.Index;
 
 namespace Zds.Cli
 {
     public class IndexFilesCommand
     {
-        private readonly Repository _repository;
+        private readonly ObjectRepository _objectRepository;
         
-        public IndexFilesCommand(Repository repository)
+        public IndexFilesCommand(ObjectRepository objectRepository)
         {
-            _repository = repository;
+            _objectRepository = objectRepository;
         }
         
         public void Execute()
@@ -31,7 +32,7 @@ namespace Zds.Cli
                         IEnumerable<ObjectRecord> records = JsonLoader.EnumerateObjects(stream);
                         foreach (var record in records)
                         {
-                            _repository.AddObjectRecord(filename, record);
+                            _objectRepository.AddObjectRecord(filename, record);
                         }
                         AnsiConsole.MarkupLine($"Indexed {filename}");
                     }

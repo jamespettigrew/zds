@@ -1,17 +1,18 @@
 using System;
 using Spectre.Console;
 using Zds.Core;
+using Zds.Core.Index;
 using Zds.Core.Queries;
 
 namespace Zds.Cli
 {
     public class BuildQueryCommand
     {
-        private readonly Repository _repository;
+        private readonly ObjectRepository _objectRepository;
 
-        public BuildQueryCommand(Repository repository)
+        public BuildQueryCommand(ObjectRepository objectRepository)
         {
-            _repository = repository;
+            _objectRepository = objectRepository;
         }
 
         public ObjectGraphQuery Execute()
@@ -28,7 +29,7 @@ namespace Zds.Cli
             var prompt = new SelectionPrompt<string>()
                 .Title($"Which [{Theme.PrimaryColour}]source[/] would you like to search?")
                 .MoreChoicesText("[grey](Press UP and DOWN to reveal more.)[/]")
-                .AddChoices(_repository.ListSources());
+                .AddChoices(_objectRepository.ListSources());
             string selectedSource = AnsiConsole.Prompt(prompt);
             AnsiConsole.MarkupLine($"Source selected: [{Theme.PrimaryColour}]{selectedSource}[/]");
 
@@ -40,7 +41,7 @@ namespace Zds.Cli
             var prompt = new SelectionPrompt<string>()
                 .Title($"Which [{Theme.PrimaryColour}]path[/] would you like to search?")
                 .MoreChoicesText("[grey](Press UP and DOWN to reveal more.)[/]")
-                .AddChoices(_repository.ListPathsForSource(source));
+                .AddChoices(_objectRepository.ListPathsForSource(source));
             string selectedPath = AnsiConsole.Prompt(prompt);
             AnsiConsole.MarkupLine($"Path selected: [{Theme.PrimaryColour}]{selectedPath}[/]");
 

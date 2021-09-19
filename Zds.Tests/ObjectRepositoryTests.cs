@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Zds.Core;
+using Zds.Core.Index;
 
 namespace Zds.Tests
 {
@@ -10,22 +11,22 @@ namespace Zds.Tests
         [TestMethod]
         public void ListSourceCorrect()
         {
-            Repository repository = new();
-            repository.AddObjectRecord(
+            ObjectRepository objectRepository = new();
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(new Position(0, 0), new List<PathValue>()));
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test2",
                 new ObjectRecord(new Position(0, 0), new List<PathValue>()));
 
-            CollectionAssert.AreEquivalent(new [] { "test1", "test2" }, repository.ListSources());
+            CollectionAssert.AreEquivalent(new [] { "test1", "test2" }, objectRepository.ListSources());
         }
         
         [TestMethod]
         public void ListPathsForSourceCorrect()
         {
-            Repository repository = new();
-            repository.AddObjectRecord(
+            ObjectRepository objectRepository = new();
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(1, 3),
@@ -36,7 +37,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(4, 6),
@@ -47,7 +48,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test2",
                 new ObjectRecord(
                     new Position(7, 3),
@@ -59,14 +60,14 @@ namespace Zds.Tests
                 )
             );
 
-            CollectionAssert.AreEquivalent(new [] { "x", "y" }, repository.ListPathsForSource("test1"));
+            CollectionAssert.AreEquivalent(new [] { "x", "y" }, objectRepository.ListPathsForSource("test1"));
         }
         
         [TestMethod]
         public void QueryForPresentValueCorrect()
         {
-            Repository repository = new();
-            repository.AddObjectRecord(
+            ObjectRepository objectRepository = new();
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(1, 3),
@@ -77,7 +78,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(4, 6),
@@ -88,7 +89,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test2",
                 new ObjectRecord(
                     new Position(7, 3),
@@ -102,7 +103,7 @@ namespace Zds.Tests
 
             CollectionAssert.AreEquivalent(
                 new Position[] { new (1, 3), new (4, 6) },
-                repository.QuerySource("test1", "y", "1")
+                objectRepository.QuerySource("test1", "y", "1")
             );
         }
         
@@ -110,8 +111,8 @@ namespace Zds.Tests
         [TestMethod]
         public void QueryForMissingValueCorrect()
         {
-            Repository repository = new();
-            repository.AddObjectRecord(
+            ObjectRepository objectRepository = new();
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(1, 3),
@@ -122,7 +123,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(4, 6),
@@ -133,7 +134,7 @@ namespace Zds.Tests
                     }
                 )
             );
-            repository.AddObjectRecord(
+            objectRepository.AddObjectRecord(
                 "test1",
                 new ObjectRecord(
                     new Position(7, 3),
@@ -147,7 +148,7 @@ namespace Zds.Tests
 
             CollectionAssert.AreEquivalent(
                 new Position[] { new (7, 3) },
-                repository.QuerySource("test1", "y", null)
+                objectRepository.QuerySource("test1", "y", null)
             );
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Zds.Core.Index;
 
 namespace Zds.Core.Queries
 {
@@ -11,27 +12,27 @@ namespace Zds.Core.Queries
     
     public class ObjectGraphQueryHandler
     {
-        private readonly Repository _repository;
-        private readonly RelationManager _relationManager;
+        private readonly ObjectRepository _objectRepository;
+        private readonly RelationsRepository _relationsRepository;
         
-        public ObjectGraphQueryHandler(Repository repository, RelationManager relationManager)
+        public ObjectGraphQueryHandler(ObjectRepository objectRepository, RelationsRepository relationsRepository)
         {
-            _repository = repository;
-            _relationManager = relationManager;
+            _objectRepository = objectRepository;
+            _relationsRepository = relationsRepository;
         }
         
         public Page<ObjectGraph> Execute(ObjectGraphQuery query, int pageSize)
         {
-            List<Match> matches = _repository.QuerySource(query.Source, query.Path, query.Value);
+            List<Match> matches = _objectRepository.QuerySource(query.Source, query.Path, query.Value);
             List<ObjectGraph> GeneratePageResults(int startOffset, int count)
             {
                 List<ObjectGraph> queryResults = new();
                 foreach (Match match in matches.GetRange(startOffset, count))
                 {
                     JObject obj = GetObjectFromFile(match.Source, match.Position);
-                    List<ObjectGraphQuery> relatedQueries = _relationManager.ComputeRelatedQueries(query.Source, obj);
+                    List<ObjectGraphQuery> relatedQueries = _relationsRepository.ComputeRelatedQueries(query.Source, obj);
                     List<JObject> relatedObjects = relatedQueries
-                        .Select(q => _repository.QuerySource(q.Source, q.Path, q.Value))
+                        .Select(q => _objectRepository.QuerySource(q.Source, q.Path, q.Value))
                         .SelectMany(match => match)
                         .Select(match => GetObjectFromFile(match.Source, match.Position))
                         .ToList();

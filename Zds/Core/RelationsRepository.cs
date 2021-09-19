@@ -7,7 +7,7 @@ namespace Zds.Core
     public record Relation(Key From, Key To);
     public record Key(string Source, string Path);
     
-    public class RelationManager
+    public class RelationsRepository
     {
         private readonly Dictionary<string, Dictionary<string, List<Key>>> _relations = new()
         {

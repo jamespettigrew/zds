@@ -6,10 +6,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Zds.Core
 {
-    public record Position(int Line, int LinePosition);
-    public record ObjectRecord(Position Position, List<PathValue> PathValues);
-    public record PathValue(string Path, string Value);
-
     public class JsonLoaderException : Exception
     {
         public JsonLoaderException(string message, Exception innerException) : base(message, innerException)
