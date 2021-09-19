@@ -41,7 +41,6 @@ namespace Zds.Cli
             {
                 Alignment = Justify.Left
             });
-            new SelectSourceCommand(_repository).Execute();
         }
     }
 }

@@ -16,9 +16,8 @@ namespace Zds.Cli
             _queryHandler = queryHandler;
         }
         
-        public void Execute(string selectedSource, string selectedPath, string? value)
+        public void Execute(ObjectGraphQuery query)
         {
-            ObjectGraphQuery query = new(selectedSource, selectedPath, value);
             Page<ObjectGraph> page = _queryHandler.Execute(query, 3);
             
             Rule r = new($"[{Theme.PrimaryColour}]Query Results[/]") {Alignment = Justify.Left};
@@ -96,7 +95,10 @@ namespace Zds.Cli
             };
             footer.AddColumn("");
             footer.HideHeaders();
-            footer.AddRow(new Text($"Displaying results {page.Start + 1}-{page.End} / {page.Total}"));
+            string metadata = page.Total == 0
+                ? "No results"
+                : $"Displaying results {page.Start + 1}-{page.End} / {page.Total}";
+            footer.AddRow(new Text(metadata));
             if (page.Prev() != null) footer.AddRow(new Text("Prev (←)"));
             if (page.Next() != null) footer.AddRow(new Text("Next (→)"));
             footer.AddRow(new Text("New Search (Any other key)"));
