@@ -21,6 +21,9 @@ namespace Zds
     {
         static void Main(string[] args)
         {
+            bool running = true;
+            Console.CancelKeyPress += (_, _) => { running = false; };
+            
             Parser.Default
                 .ParseArguments<Options>(args)
                 .WithParsed(options =>
@@ -29,7 +32,7 @@ namespace Zds
                     RelationsRepository relationsRepository = new();
                     ObjectGraphQueryHandler handler = new(objectRepository, relationsRepository);
                     new LoadFilesCommand(options, objectRepository, relationsRepository).Execute();
-                    while (true)
+                    while (running)
                     {
                         ObjectGraphQuery query = new BuildQueryCommand(objectRepository).Execute();
                         new DisplayQueryResultsCommand(handler).Execute(query);
