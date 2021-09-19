@@ -12,13 +12,4 @@
       <PackageReference Include="System.Text.Json" Version="5.0.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="tickets.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="users.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
