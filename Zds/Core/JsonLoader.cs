@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -59,11 +60,17 @@ namespace Zds.Core
                     case JTokenType.None:
                         continue;
                     case JTokenType.Array:
-                        foreach (JToken child in token.Children())
-                        {
-                            if (child.Type != JTokenType.String) continue;
-                            pathValues.Add(new (token.Path, child.ToString()));
-                        }
+                        var relevantChildren = token
+                            .Children()
+                            .Where(c =>
+                                c.Type == JTokenType.Boolean ||
+                                c.Type == JTokenType.Date ||
+                                c.Type == JTokenType.Integer ||
+                                c.Type == JTokenType.TimeSpan ||
+                                c.Type == JTokenType.Guid ||
+                                c.Type == JTokenType.String)
+                            .Select(c => new PathValue(token.Path, c.ToString()));
+                        pathValues.AddRange(relevantChildren);
                         break;
                     case JTokenType.Object:
                     case JTokenType.Property:

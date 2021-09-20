@@ -156,6 +156,9 @@ The .NET ecosystem has not placed as much emphasis in the past on CLI type tools
 #### Known Unsupported
 - Alacritty
 
+### Searching arrays
+Only arrays of primitive types are supported for querying. Objects within arrays are ignored.
+
 ## Future Work
 - [Address flaws in fetching objects from disk.](#fetching-objects-from-disk)
 - If the intended user is more competent than my assumptions, perhaps support more complex queries by integrating a parser combinator library such as [Superpower](https://github.com/datalust/superpower).
