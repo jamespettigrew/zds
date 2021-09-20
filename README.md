@@ -51,6 +51,7 @@ Upon starting, the provided source and [relations](#relations) files will be ind
 **Constraints**:
 - Search values are exact matched.
 - Nested objects can be searched, and arrays can be searched, but objects within arrays cannot be searched.
+- Leave the search value blank if you wish to search for objects that have no value for the specified path.
 
 Any matching objects will be returned in pages:
 - To view the next page, press the right arrow key.
