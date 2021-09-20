@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "436bf9b0-1147-4c0a-8439-6f79833bff5b",
+    "created_at": "2016-04-28T11:19:34-10:00",
+    "type": "incident",
+    "subject": "A Catastrophe in Korea (North)",
+    "assignee_id": 24,
+    "tags": [
+      "Ohio",
+      "Pennsylvania",
+      "American Samoa",
+      "Northern Mariana Islands"
+    ],
+    "nested": {
+      "double_nested": {
+        "path": "value"
+      }
+    }
+  }
+]
