@@ -46,7 +46,19 @@ Copyright (C) 2021 Zds
 
 The application can be exited via `Ctrl-c`.
 
-Supports nested objects and arrays of strings.
+Upon starting, the provided source and [relations](#relations) files will be indexed. You will then be prompted to build a query, providing source file, path and search value.
+
+**Constraints**:
+- Search values are exact matched.
+- Nested objects can be searched, and arrays can be searched, but objects within arrays cannot be searched.
+
+Any matching objects will be returned in pages:
+- To view the next page, press the right arrow key.
+- To view the previous page, press the left arrow key.
+- Press any other key to start a new search.
+
+Demo
+[![asciicast](https://asciinema.org/a/gCdjPm1PuyVgKB4KEdcTubM05.svg)](https://asciinema.org/a/gCdjPm1PuyVgKB4KEdcTubM05)
 
 ### Relations
 Relations can be defined between objects. Each matching search result will also be accompanied by any related results per the defined relations.
@@ -96,6 +108,8 @@ My assumptions:
 - The user may not be a developer / may be only semi-skilled.
 - The data may not be entirely uniform in structure.
 - The kind of data may vary per user i.e. it won't always be `tickets.json` and `users.json`.
+- The user is an English speaker and the application does not require internationalisation.
+
 
 With these assumptions in mind, I had the following design goals:
 - **Optimise for multiple searches**
@@ -126,7 +140,7 @@ But for the purposes of this particular task it's the platform that best demonst
 ## Limitations
 
 ### Fetching objects from disk
-The strategy to achieve low latency search with minimal memory consumption was to index only positions of objects in files, and retrieving the object from disk before displaying results.
+The strategy to achieve low latency search with minimal memory consumption was to index only positions of objects in files, retrieving the object from disk before displaying results.
 
 There is a flaw in the current implementation in that the JSON library used ([JSON.NET](https://github.com/JamesNK/Newtonsoft.Json)) parses files through the use of a character stream, not a byte stream. The position info for JSON tokens is consequently represented as a line and character pair. Retrieving the object from disk at a later time based upon this line and character pair requires seeking through the file until the appropriate number of lines and characters have been enumerated. For objects not near the start of the file, this is unnecessarily heavy on IO and results in significantly greater search latency.
 
