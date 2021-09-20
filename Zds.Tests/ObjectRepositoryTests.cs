@@ -33,7 +33,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "0"),
-                        new("y", "1"),
+                        new("y", "1")
                     }
                 )
             );
@@ -55,7 +55,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "1"),
-                        new("z", "1"),
+                        new("z", "1")
                     }
                 )
             );
@@ -74,7 +74,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "0"),
-                        new("y", "1"),
+                        new("y", "1")
                     }
                 )
             );
@@ -85,7 +85,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "1"),
-                        new("y", "1"),
+                        new("y", "1")
                     }
                 )
             );
@@ -96,13 +96,17 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "1"),
-                        new("z", "1"),
+                        new("z", "1")
                     }
                 )
             );
 
             CollectionAssert.AreEquivalent(
-                new Position[] { new (1, 3), new (4, 6) },
+                new Match[]
+                {
+                    new ("test1", "y", new Position(1, 3)),
+                    new ("test1", "y", new Position(4, 6))
+                },
                 objectRepository.QuerySource("test1", "y", "1")
             );
         }
@@ -119,7 +123,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "0"),
-                        new("y", "1"),
+                        new("y", "1")
                     }
                 )
             );
@@ -130,7 +134,7 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "1"),
-                        new("y", "1"),
+                        new("y", "1")
                     }
                 )
             );
@@ -141,13 +145,13 @@ namespace Zds.Tests
                     new List<PathValue>
                     {
                         new("x", "1"),
-                        new("z", "1"),
+                        new("z", "1")
                     }
                 )
             );
 
             CollectionAssert.AreEquivalent(
-                new Position[] { new (7, 3) },
+                new Match[] { new ("test1", "y", new Position(7, 3))},
                 objectRepository.QuerySource("test1", "y", null)
             );
         }
