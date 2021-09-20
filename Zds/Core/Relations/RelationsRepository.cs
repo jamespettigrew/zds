@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Zds.Core.Queries;
 
 namespace Zds.Core.Relations
@@ -11,7 +12,7 @@ namespace Zds.Core.Relations
         public RelationsException(string message, Exception innerException) : base(message, innerException) { }
     }
     
-    public record Relation(Key From, Key To);
+    public record Relation(Key From,  Key To);
     public record Key(string Source, string Path);
     
     public class RelationsRepository
