@@ -26,7 +26,8 @@ namespace Zds.Tests
             var pathValues = new PathValue[]
             {
                 new ("a", "1"),
-                new ("b", "2")
+                new ("a", "2"),
+                new ("b", "3")
             };
             
             CollectionAssert.AreEquivalent(
@@ -34,7 +35,11 @@ namespace Zds.Tests
                 repository.ComputeRelatedQueries("other", pathValues)
             );
             CollectionAssert.AreEquivalent(
-                new List<ObjectGraphQuery> { new ("test2", "b", "1") },
+                new List<ObjectGraphQuery>
+                {
+                    new ("test2", "b", "1"),
+                    new ("test2", "b", "2")
+                },
                 repository.ComputeRelatedQueries("test", pathValues)
             );
         }

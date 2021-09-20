@@ -39,7 +39,14 @@ namespace Zds.Core.Relations
         public List<ObjectGraphQuery> ComputeRelatedQueries(string source, IEnumerable<PathValue> pathValues)
         {
             List<ObjectGraphQuery> relatedQueries = new();
-            Dictionary<string, string> pathValueLookup = pathValues.ToDictionary(pv => pv.Path, pv => pv.Value);
+
+            Dictionary<string, List<string>> pathValueLookup = new();
+            foreach (PathValue pv in pathValues)
+            {
+                pathValueLookup.TryAdd(pv.Path, new List<string>());
+                pathValueLookup[pv.Path].Add(pv.Value);
+            }
+            
             if (_sourceRelationLookup.TryGetValue(source, out Dictionary<string, List<Key>>? sourceRelations))
             {
                 foreach (string fromPath in sourceRelations.Keys)
@@ -48,7 +55,9 @@ namespace Zds.Core.Relations
                     
                     foreach (Key to in sourceRelations[fromPath])
                     {
-                        relatedQueries.Add(new ObjectGraphQuery(to.Source, to.Path, pathValueLookup[fromPath]));
+                        var queries = pathValueLookup[fromPath]
+                            .Select(value => new ObjectGraphQuery(to.Source, to.Path, value));
+                        relatedQueries.AddRange(queries);
                     }
                 }
             }
