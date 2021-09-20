@@ -14,7 +14,7 @@ namespace Zds.Core
         }
     }
     
-    public static class JsonLoader
+    public static class JsonUtils
     {
         public static IEnumerable<ObjectRecord> EnumerateObjects(Stream stream)
         {

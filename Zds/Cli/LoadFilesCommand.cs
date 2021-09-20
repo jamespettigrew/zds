@@ -44,7 +44,7 @@ namespace Zds.Cli
                     using Stream? stream = _sourceContext.StreamSource(source);
                     if (stream == null) continue;
                     
-                    IEnumerable<ObjectRecord> records = JsonLoader.EnumerateObjects(stream);
+                    IEnumerable<ObjectRecord> records = JsonUtils.EnumerateObjects(stream);
                     foreach (var record in records)
                     {
                         _objectRepository.AddObjectRecord(source, record);

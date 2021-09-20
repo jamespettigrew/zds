@@ -36,7 +36,7 @@ namespace Zds.Core.Queries
                 foreach (Match match in matches.GetRange(startOffset, count))
                 {
                     JObject obj = GetObjectFromFile(match.Source, match.Position);
-                    List<PathValue> pathValues = JsonLoader.Flatten(obj);
+                    List<PathValue> pathValues = JsonUtils.Flatten(obj);
                     List<ObjectGraphQuery> relatedQueries = _relationsRepository.ComputeRelatedQueries(query.Source, pathValues);
                     List<JObject> relatedObjects = relatedQueries
                         .Select(q => _objectRepository.QuerySource(q.Source, q.Path, q.Value))
@@ -55,7 +55,7 @@ namespace Zds.Core.Queries
         private JObject GetObjectFromFile(string source, Position position)
         {
             using Stream? stream = _sourceContext.StreamSource(source);
-            return JsonLoader.GetObjectStartingAtPosition(stream, position);
+            return JsonUtils.GetObjectStartingAtPosition(stream, position);
         }
     }
 }
