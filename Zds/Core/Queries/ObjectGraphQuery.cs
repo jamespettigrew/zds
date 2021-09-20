@@ -31,11 +31,12 @@ namespace Zds.Core.Queries
                 foreach (Match match in matches.GetRange(startOffset, count))
                 {
                     JObject obj = GetObjectFromFile(match.Source, match.Position);
-                    List<ObjectGraphQuery> relatedQueries = _relationsRepository.ComputeRelatedQueries(query.Source, obj);
+                    List<PathValue> pathValues = JsonLoader.Flatten(obj);
+                    List<ObjectGraphQuery> relatedQueries = _relationsRepository.ComputeRelatedQueries(query.Source, pathValues);
                     List<JObject> relatedObjects = relatedQueries
                         .Select(q => _objectRepository.QuerySource(q.Source, q.Path, q.Value))
-                        .SelectMany(match => match)
-                        .Select(match => GetObjectFromFile(match.Source, match.Position))
+                        .SelectMany(relatedMatches => relatedMatches)
+                        .Select(relatedMatch => GetObjectFromFile(relatedMatch.Source, relatedMatch.Position))
                         .ToList();
                     queryResults.Add(new(obj, relatedObjects));
                 }

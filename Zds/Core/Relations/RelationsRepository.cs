@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using System.Linq;
 using Zds.Core.Queries;
 
 namespace Zds.Core.Relations
@@ -36,19 +36,19 @@ namespace Zds.Core.Relations
             }
         }
         
-        public List<ObjectGraphQuery> ComputeRelatedQueries(string source, JObject obj)
+        public List<ObjectGraphQuery> ComputeRelatedQueries(string source, IEnumerable<PathValue> pathValues)
         {
             List<ObjectGraphQuery> relatedQueries = new();
+            Dictionary<string, string> pathValueLookup = pathValues.ToDictionary(pv => pv.Path, pv => pv.Value);
             if (_sourceRelationLookup.TryGetValue(source, out Dictionary<string, List<Key>>? sourceRelations))
             {
                 foreach (string fromPath in sourceRelations.Keys)
                 {
-                    var value = obj.Value<string?>(fromPath);
-                    if (value == null) continue;
+                    if (!pathValueLookup.ContainsKey(fromPath)) continue;
                     
                     foreach (Key to in sourceRelations[fromPath])
                     {
-                        relatedQueries.Add(new ObjectGraphQuery(to.Source, to.Path, value));
+                        relatedQueries.Add(new ObjectGraphQuery(to.Source, to.Path, pathValueLookup[fromPath]));
                     }
                 }
             }

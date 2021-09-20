@@ -43,7 +43,7 @@ namespace Zds.Core
             }
         }
 
-        private static List<PathValue> Flatten(JObject obj)
+        public static List<PathValue> Flatten(JObject obj)
         {
             Stack<JToken> stack = new();
             stack.Push(obj);
