@@ -84,7 +84,7 @@ namespace Zds.Cli
                         }
                     );
                 }
-                tree.AddNode(relatedNode);
+                if (match.RelatedObjects.Count > 0) tree.AddNode(relatedNode);
                 table.AddRow(tree);
             }
 
