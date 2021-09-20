@@ -118,6 +118,8 @@ With these assumptions in mind, I had the following design goals:
     - Should this tool end up operating within a larger scale cloud environment it will be much cheaper if we can keep as much on disk as possible.
   - Just because we can use as much memory as an Electron app doesn't mean we should strive to.
   
+The design consists of fairly loosely-coupled core components with a CLI porcelain over the top. It's highly flexible, only enforcing a fairly minimal set of rules over the shape of data it can query. It's also very extensible; it could fairly easily be adapted to read files from S3, or some other form of seekable stream.
+  
 In practice, .NET would not be my first choice for building a CLI tool. It requires a fat runtime to be deployed alongside the application code and can suffer from JIT cold-starts.
 But for the purposes of this particular task it's the platform that best demonstrates my professional competency.
 
