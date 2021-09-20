@@ -49,7 +49,7 @@ namespace Zds.Core.Queries
         
         private JObject GetObjectFromFile(string source, Position position)
         {
-            FileStream stream = File.Open(source, FileMode.Open);
+            using FileStream stream = File.Open(source, FileMode.Open);
             return JsonLoader.GetObjectStartingAtPosition(stream, position);
         }
     }
