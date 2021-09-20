@@ -36,7 +36,7 @@ namespace Zds.Tests
         [TestMethod]
         public void EnumeratedObjectsHaveCorrectPositions()
         {
-            MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
+            using MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
             List<Position> positions = JsonUtils
                 .EnumerateObjects(stream)
                 .Select(o => o.Position)
@@ -49,7 +49,7 @@ namespace Zds.Tests
         [TestMethod]
         public void EnumeratedObjectsHaveCorrectPathValues()
         {
-            MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
+            using MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
             List<ObjectRecord> objectRecords = JsonUtils.EnumerateObjects(stream).ToList();
             
             List<PathValue> expected = new()
@@ -81,7 +81,7 @@ namespace Zds.Tests
         [TestMethod]
         public void GetObjectAtValidPositionReturnsCorrectObject()
         {
-            MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
+            using MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
             JObject expected = JsonConvert.DeserializeObject<List<JObject>>(TestJson)![1];
             JObject actual = JsonUtils.GetObjectStartingAtPosition(stream, new Position(10, 13));
 
@@ -94,6 +94,7 @@ namespace Zds.Tests
             MemoryStream stream = new(Encoding.UTF8.GetBytes(TestJson));
             Assert.ThrowsException<JsonLoaderException>(() =>
                 JsonUtils.GetObjectStartingAtPosition(stream, new Position(1, 1)));
+            stream.Dispose();
         }
         
         [TestMethod]
@@ -102,6 +103,7 @@ namespace Zds.Tests
             MemoryStream stream = new(Encoding.UTF8.GetBytes(InvalidTestJson));
             Assert.ThrowsException<JsonLoaderException>(() =>
                 JsonUtils.GetObjectStartingAtPosition(stream, new Position(3, 5)));
+            stream.Dispose();
         }
     }
 }

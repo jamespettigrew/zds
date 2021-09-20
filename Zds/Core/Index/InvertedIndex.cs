@@ -7,7 +7,7 @@ namespace Zds.Core.Index
     public class InvertedIndex
     {
         private readonly List<Position> _positions = new();
-        private readonly Dictionary<string, Dictionary<string, List<Position>>> _pathValueIndex = new ();
+        private readonly Dictionary<string, Dictionary<string, List<Position>>> _pathValueIndex = new();
 
         public List<string> ListPaths() => _pathValueIndex.Keys.ToList();
         public List<Position> ListPositions() => _positions.ToList();
@@ -28,6 +28,6 @@ namespace Zds.Core.Index
 
         public List<Position> Query(PathValue pathValue) => _pathValueIndex
             .GetValueOrDefault(pathValue.Path, new())
-            .GetValueOrDefault(pathValue.Value, new ());
+            .GetValueOrDefault(pathValue.Value, new());
     }
 }

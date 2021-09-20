@@ -55,7 +55,7 @@ namespace Zds.Core.Queries
         private JObject GetObjectFromFile(string source, Position position)
         {
             using Stream stream = _sourceContext.StreamSource(source);
-            return JsonUtils.GetObjectStartingAtPosition(stream!, position);
+            return JsonUtils.GetObjectStartingAtPosition(stream, position);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Zds.Tests.Integration
             });
             foreach (string source in fakeSourceContext.ListSources())
             {
-                Stream? sourceStream = fakeSourceContext.StreamSource(source);
+                using Stream sourceStream = fakeSourceContext.StreamSource(source);
                 foreach (ObjectRecord record in JsonUtils.EnumerateObjects(sourceStream!))
                 {
                     objectRepository.AddObjectRecord(source, record);
