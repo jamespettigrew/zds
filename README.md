@@ -46,7 +46,7 @@ Copyright (C) 2021 Zds
 
 The application can be exited via `Ctrl-c`.
 
-Upon starting, the provided source and [relations](#relations) files will be indexed. You will then be prompted to build a query, providing source file, path and search value.
+Upon starting, the provided source `.json` and [relations](#relations) files will be indexed. You will then be prompted to build a query, providing source file, path and search value.
 
 **Constraints**:
 - Search values are exact matched.
