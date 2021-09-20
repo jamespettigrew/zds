@@ -8,7 +8,7 @@ namespace Zds.Core
     public interface ISourceContext
     {
         List<string> ListSources();
-        Stream? StreamSource(string source);
+        Stream StreamSource(string source);
     }
     
     public class FileSourceContext : ISourceContext
@@ -25,11 +25,9 @@ namespace Zds.Core
             .Select(path => Path.GetFileName(path))
             .ToList();
 
-        public Stream? StreamSource(string source)
+        public Stream StreamSource(string source)
         {
-            string? path = FilePaths.FirstOrDefault(p => Path.GetFileName(p) == source);
-            if (path == null) return null;
-
+            string path = FilePaths.First(p => Path.GetFileName(p) == source);
             return File.OpenRead(path);
         }
     }

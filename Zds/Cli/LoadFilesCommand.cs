@@ -41,9 +41,7 @@ namespace Zds.Cli
             {
                 try
                 {
-                    using Stream? stream = _sourceContext.StreamSource(source);
-                    if (stream == null) continue;
-                    
+                    using Stream stream = _sourceContext.StreamSource(source);
                     IEnumerable<ObjectRecord> records = JsonUtils.EnumerateObjects(stream);
                     foreach (var record in records)
                     {

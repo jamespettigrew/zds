@@ -22,10 +22,9 @@ namespace Zds.Tests.Integration
             return _sources.Select(s => s.Source).ToList();
         }
 
-        public Stream? StreamSource(string sourceName)
+        public Stream StreamSource(string sourceName)
         {
-            FakeSource? source = _sources.FirstOrDefault(s => s.Source == sourceName);
-            if (source == null) return null;
+            FakeSource source = _sources.First(s => s.Source == sourceName);
             byte[] streamData = Encoding.UTF8.GetBytes(source.Content);
             return new MemoryStream(streamData);
         }
