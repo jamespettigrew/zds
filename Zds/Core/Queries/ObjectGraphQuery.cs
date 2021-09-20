@@ -52,49 +52,4 @@ namespace Zds.Core.Queries
             return JsonLoader.GetObjectStartingAtPosition(stream, position);
         }
     }
-
-    public record Page<T>
-    {
-        private int _size;
-        private readonly Func<int, int, List<T>> _generatePageResults;
-        
-        public Page(int total, int size, Func<int, int, List<T>> generatePageResults)
-        {
-            Total = total;
-            _size = size;
-            _generatePageResults = generatePageResults;
-            Start = 0;
-            End = Math.Min(Total, _size);
-            Results = _generatePageResults(Start, End - Start);
-        }
-
-        public int Start { get; init; }
-        public int End { get; init; }
-        public int Total { get; }
-        public List<T> Results { get; init; }
-        
-        public Page<T>? Prev()
-        {
-            int prevStart = Math.Max(0, Start - _size);
-            int prevEnd = Math.Min(Total, Start);
-            if (prevEnd <= prevStart) return null;
-            return this with {
-                Start = prevStart,
-                End = prevEnd,
-                Results = _generatePageResults(prevStart, prevEnd - prevStart)
-            };
-        }
-
-        public Page<T>? Next()
-        {
-            int nextStart = End;
-            int nextEnd = Math.Min(Total, End + _size);
-            if (nextStart >= nextEnd) return null;
-            return this with {
-                Start = nextStart,
-                End = nextEnd,
-                Results = _generatePageResults(nextStart, nextEnd - nextStart)
-            };
-        }
-    }
 }

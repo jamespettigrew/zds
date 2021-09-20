@@ -99,8 +99,8 @@ namespace Zds.Cli
                 ? "No results"
                 : $"Displaying results {page.Start + 1}-{page.End} / {page.Total}";
             footer.AddRow(new Text(metadata));
-            if (page.Prev() != null) footer.AddRow(new Text("Prev (←)"));
-            if (page.Next() != null) footer.AddRow(new Text("Next (→)"));
+            if (page.HasPrev) footer.AddRow(new Text("Prev (←)"));
+            if (page.HasNext) footer.AddRow(new Text("Next (→)"));
             footer.AddRow(new Text("New Search (Any other key)"));
             table.AddRow(footer);
             
