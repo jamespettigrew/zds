@@ -12,15 +12,18 @@ namespace Zds.Cli
         private readonly Options _options;
         private readonly ObjectRepository _objectRepository;
         private readonly RelationsRepository _relationsRepository;
+        private readonly ISourceContext _sourceContext;
         
         public LoadFilesCommand(
             Options options,
             ObjectRepository objectRepository,
-            RelationsRepository relationsRepository)
+            RelationsRepository relationsRepository,
+            ISourceContext sourceContext)
         {
             _options = options;
             _objectRepository = objectRepository;
             _relationsRepository = relationsRepository;
+            _sourceContext = sourceContext;
         }
         
         public void Execute()
@@ -33,24 +36,25 @@ namespace Zds.Cli
 
         private void LoadDataFiles()
         {
-            string dataPath = _options.DataSearchPath ?? Directory.GetCurrentDirectory();
-            IEnumerable<string> filenames = Directory.EnumerateFiles(dataPath);
-            foreach (string filename in filenames)
+            List<string> sources = _sourceContext.ListSources();
+            foreach (string source in sources)
             {
                 try
                 {
-                    FileStream stream = File.Open(filename, FileMode.Open);
+                    using Stream? stream = _sourceContext.StreamSource(source);
+                    if (stream == null) continue;
+                    
                     IEnumerable<ObjectRecord> records = JsonLoader.EnumerateObjects(stream);
                     foreach (var record in records)
                     {
-                        _objectRepository.AddObjectRecord(filename, record);
+                        _objectRepository.AddObjectRecord(source, record);
                     }
 
-                    AnsiConsole.MarkupLine($"Indexed {filename}");
+                    AnsiConsole.MarkupLine($"Indexed {source}");
                 }
                 catch (JsonLoaderException e)
                 {
-                    AnsiConsole.MarkupLine($"[yellow]WARNING[/] error loading {filename}.");
+                    AnsiConsole.MarkupLine($"[yellow]WARNING[/] error loading {source}.");
                     AnsiConsole.WriteException(e);
                 }
             }

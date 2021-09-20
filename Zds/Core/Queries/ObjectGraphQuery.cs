@@ -15,11 +15,16 @@ namespace Zds.Core.Queries
     {
         private readonly ObjectRepository _objectRepository;
         private readonly RelationsRepository _relationsRepository;
+        private readonly ISourceContext _sourceContext;
         
-        public ObjectGraphQueryHandler(ObjectRepository objectRepository, RelationsRepository relationsRepository)
+        public ObjectGraphQueryHandler(
+            ObjectRepository objectRepository,
+            RelationsRepository relationsRepository,
+            ISourceContext sourceContext)
         {
             _objectRepository = objectRepository;
             _relationsRepository = relationsRepository;
+            _sourceContext = sourceContext;
         }
         
         public Page<ObjectGraph> Execute(ObjectGraphQuery query, int pageSize)
@@ -49,7 +54,7 @@ namespace Zds.Core.Queries
         
         private JObject GetObjectFromFile(string source, Position position)
         {
-            using FileStream stream = File.Open(source, FileMode.Open);
+            using Stream? stream = _sourceContext.StreamSource(source);
             return JsonLoader.GetObjectStartingAtPosition(stream, position);
         }
     }
