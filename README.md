@@ -181,3 +181,4 @@ Only arrays of primitive types are supported for querying. Objects within arrays
 - If the intended user is more competent than my assumptions, perhaps support more complex queries by integrating a parser combinator library such as [Superpower](https://github.com/datalust/superpower).
 - Rethink how pagination should work with large numbers of related results.
 - Allow redefining relations after application start
+- Exporting of search results
