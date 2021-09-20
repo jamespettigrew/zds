@@ -50,7 +50,7 @@ namespace Zds.Cli
                 }
                 catch (JsonLoaderException e)
                 {
-                    AnsiConsole.Render(new Text($"[yellow]WARNING[/] error loading {filename}."));
+                    AnsiConsole.MarkupLine($"[yellow]WARNING[/] error loading {filename}.");
                     AnsiConsole.WriteException(e);
                 }
             }
@@ -73,7 +73,7 @@ namespace Zds.Cli
             }
             catch (RelationsException e)
             {
-                AnsiConsole.Render(new Text("[yellow]WARNING[/] error loading relations."));
+                AnsiConsole.MarkupLine("[yellow]WARNING[/] error loading relations.");
                 AnsiConsole.WriteException(e);
             }
         }
