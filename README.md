@@ -46,12 +46,13 @@ Copyright (C) 2021 Zds
 
 The application can be exited via `Ctrl-c`.
 
-Upon starting, the provided source `.json` and [relations](#relations) files will be indexed. You will then be prompted to build a query, providing source file, path and search value.
+Upon starting, the provided source `.json` and [relations](#relations) files will be indexed. You will then be prompted to build a query, providing source file, JSON path and search value. 
+
+Leave the search value blank if you wish to search for objects that have no value for the specified path.
 
 **Constraints**:
 - Search values are exact matched.
 - Nested objects can be searched, and arrays can be searched, but objects within arrays cannot be searched.
-- Leave the search value blank if you wish to search for objects that have no value for the specified path.
 
 Any matching objects will be returned in pages:
 - To view the next page, press the right arrow key.
@@ -147,7 +148,7 @@ There is a flaw in the current implementation in that the JSON library used ([JS
 
 I investigated alternative JSON libraries such as Microsoft's newer [System.Text.Json](https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/). This library uses a byte stream underneath, meaning it should be possible to store the byte offsets of objects and retrieve them from disk with very little IO and latency. However, interacting with this library at the low level needed to accomplish this is tricky and requires working with some fairly esoteric language features.
 
-I think the original concept would be achievable with additional work, but I'm leaving it as out of scope for now.
+I think indexing byte offsets is achievable with additional work, but I'm leaving it as out of scope for now.
 
 ### Data structures
 For the sake of simplicity, I elected to use an inverted index (in the form of a dictionary) for matching search terms against objects.
